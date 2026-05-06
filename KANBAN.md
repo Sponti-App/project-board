@@ -21,11 +21,11 @@ Goal: Align MVP scope, wireframes, data model, app/API foundation, auth foundati
 
 | ID | Priority | Labels | Card | Primary | Support | Checkpoint | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| S0-001 | P0 | Product, Technical decision | Confirm MVP scope and technical direction | Martin + Nil | Team | 2026-05-06 | Vercel is now the agreed deployment target. Standup needs to confirm backend wiring shape and whether any Ryan feedback changes Sprint 0 scope. |
+| S0-001 | P0 | Product, Technical decision | Confirm MVP scope and technical direction | Martin + Nil | Team | 2026-05-06 | Vercel is now the agreed deployment target. Standup needs to confirm backend wiring shape and Sprint 0 deployment scope. |
 | S0-002 | P0 | Data, Backend | Finalize data model and database plan | Nil | Samara + Martin | 2026-05-07 | Nil is organizing the data models. Before deploy/wiring, confirm the MVP subset needed now: users, events, event members/participants, and basic trust/connection fields. |
 | S0-003 | P0 | Foundation, Deployment | Create deployable app/API foundation | Nil | Martin + Samara + Patrick | 2026-05-07 | Vercel is chosen. Current code repo has a Next/shadcn scaffold and separate auth-server stub; standup should check build/deploy blockers, API/health route, and backend wiring approach. |
 | S0-005 | P0 | Auth, Frontend, Backend | Build auth foundation and prototype | Nil + Samara | Patrick | 2026-05-07 | Pages need to be ready enough before backend wiring is locked. Current code inspection shows scaffold/auth-server stub only, so standup should confirm owner and minimum auth screens/API shape for Thursday. |
-| S0-006 | P0 | Design | Create main wireframes and visual rules | Patrick | Martin + Samara | 2026-05-06 | Patrick has started a Miro page. Martin will help before standup; goal is usable wireframe direction, not polished implementation. |
+| S0-006 | P0 | Design | Create main wireframes and visual rules | Patrick | Martin + Samara | 2026-05-06 | Patrick has started a Miro page. Martin helps Patrick finish wireframes today, 2026-05-06, before standup; goal is usable wireframe direction, not polished implementation. |
 
 ### Review
 
@@ -47,7 +47,6 @@ No confirmed blocked cards.
 | ID | Priority | Labels | Card | Primary | Done date | Done note |
 | --- | --- | --- | --- | --- | --- | --- |
 | S0-008 | P0 | Process | Create Markdown Kanban board / GitHub project-board repo | Martin | 2026-05-05 | Public `Sponti-App/project-board` repo created and initial team-facing Kanban published. |
-| S0-009 | P0 | Mentor | Prepare mentor session 1 questions | Martin | 2026-05-05 | Ryan meeting 1 is done. Any feedback that affects scope, stack, or Sprint 0 tasks should be folded into active cards. |
 
 ## Sprint 1 - Core MVP
 
@@ -77,7 +76,7 @@ Goal: Stabilize, polish, smoke test, rehearse, and freeze by Wednesday 2026-05-2
 
 | ID | Priority | Labels | Card | Primary | Support | Checkpoint | Done when |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| S2-001 | P0 | QA, Risk | Bug triage and freeze-candidate risk review | Martin | Team + Nil | 2026-05-19 | Bugs are marked blocking/non-blocking, Ryan reviews final code/demo risks, and the team knows what must be fixed before freeze. |
+| S2-001 | P0 | QA, Risk | Bug triage and freeze-candidate risk review | Martin | Team + Nil | 2026-05-19 | Bugs are marked blocking/non-blocking, final code/demo risks are reviewed, and the team knows what must be fixed before freeze. |
 | S2-002 | P0 | Frontend, Design, Polish | Responsive and UX polish pass | Patrick | Samara + Martin | 2026-05-18 | Core pages work on mobile and laptop widths; empty/loading/error states are understandable; visual issues are fixed or documented. |
 | S2-003 | P0 | Demo, Fallback | Demo readiness and fallback package | Martin + Patrick | Samara | 2026-05-18 | Demo accounts and data are ready, fallback screenshots exist, and the demo environment is known. |
 | S2-004 | P0 | Presentation, Rehearsal | Final presentation and rehearsal | Martin | Team | 2026-05-20 | Elevator pitch, demo script, presenter roles, architecture/lessons slides, and full rehearsal are complete within the target time. |
