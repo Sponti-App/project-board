@@ -21,8 +21,11 @@ Goal: Align MVP scope, wireframes, data model, app/API foundation, auth foundati
 
 | ID | Priority | Labels | Card | Primary | Support | Checkpoint | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| S0-001 | P0 | Product, Technical decision | Confirm MVP scope and technical direction | Martin + Nil | Team | 2026-05-08 | MVP/cut list exists. Vercel / Next.js / shadcn direction is under team review, with Nil holding final technical vote. Ryan mentor notes still need to be processed into decisions or follow-ups. |
-| S0-002 | P0 | Data, Backend | Finalize data model and database plan | Nil | Samara + Martin | 2026-05-08 | Nil is working on the MongoDB data diagram, collections, relationships, and overall data structure. No blockers reported. |
+| S0-001 | P0 | Product, Technical decision | Confirm MVP scope and technical direction | Martin + Nil | Team | 2026-05-06 | Vercel is now the agreed deployment target. Standup needs to confirm backend wiring shape and whether any Ryan feedback changes Sprint 0 scope. |
+| S0-002 | P0 | Data, Backend | Finalize data model and database plan | Nil | Samara + Martin | 2026-05-07 | Nil is organizing the data models. Before deploy/wiring, confirm the MVP subset needed now: users, events, event members/participants, and basic trust/connection fields. |
+| S0-003 | P0 | Foundation, Deployment | Create deployable app/API foundation | Nil | Martin + Samara + Patrick | 2026-05-07 | Vercel is chosen. Current code repo has a Next/shadcn scaffold and separate auth-server stub; standup should check build/deploy blockers, API/health route, and backend wiring approach. |
+| S0-005 | P0 | Auth, Frontend, Backend | Build auth foundation and prototype | Nil + Samara | Patrick | 2026-05-07 | Pages need to be ready enough before backend wiring is locked. Current code inspection shows scaffold/auth-server stub only, so standup should confirm owner and minimum auth screens/API shape for Thursday. |
+| S0-006 | P0 | Design | Create main wireframes and visual rules | Patrick | Martin + Samara | 2026-05-06 | Patrick has started a Miro page. Martin will help before standup; goal is usable wireframe direction, not polished implementation. |
 
 ### Review
 
@@ -36,10 +39,7 @@ No confirmed blocked cards.
 
 | ID | Priority | Labels | Card | Primary | Support | Checkpoint | Done when / notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| S0-003 | P0 | Foundation, Deployment | Create deployable app/API foundation | Nil | Martin + Samara + Patrick | 2026-05-08 | The chosen app structure exists, runs locally, has a health check or equivalent, and can be deployed or previewed on the chosen platform. Includes routing/rewrites and CORS or same-origin API policy as needed. |
-| S0-004 | P0 | Data, Deployment | Set up database and environment variables | Martin + Nil | Samara | 2026-05-08 | MongoDB Atlas/dev database is available, required secrets and URLs are documented/configured for local and deployment environments, and the app can connect. |
-| S0-005 | P0 | Auth, Frontend, Backend | Build auth foundation and prototype | Nil + Samara | Patrick | 2026-05-08 | Register/login/me or equivalent auth flow is agreed and lightly working enough for Sprint 1. Simple auth screens exist for wiring and UX decisions. |
-| S0-006 | P0 | Design | Create main wireframes and visual rules | Patrick | Samara | 2026-05-08 | Feed, detail, create, profile, and My Meetups are sketched, and basic color, spacing, buttons, forms, and card rules are agreed. |
+| S0-004 | P0 | Data, Deployment | Set up database and environment variables | Martin + Nil | Samara | 2026-05-07 | MongoDB Atlas/dev database is available, required secrets and URLs are documented/configured for Vercel/local environments, and the app can connect. Confirm owner and env var list at standup. |
 | S0-007 | P0 | Product, QA, Demo | Define acceptance criteria, demo path, and sprint review notes | Martin | Samara + Patrick + Team | 2026-05-08 | Core feature acceptance criteria, 5-7 minute demo path, and Friday sprint review notes are documented. |
 
 ### Done
@@ -47,6 +47,7 @@ No confirmed blocked cards.
 | ID | Priority | Labels | Card | Primary | Done date | Done note |
 | --- | --- | --- | --- | --- | --- | --- |
 | S0-008 | P0 | Process | Create Markdown Kanban board / GitHub project-board repo | Martin | 2026-05-05 | Public `Sponti-App/project-board` repo created and initial team-facing Kanban published. |
+| S0-009 | P0 | Mentor | Prepare mentor session 1 questions | Martin | 2026-05-05 | Ryan meeting 1 is done. Any feedback that affects scope, stack, or Sprint 0 tasks should be folded into active cards. |
 
 ## Sprint 1 - Core MVP
 
