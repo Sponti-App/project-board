@@ -1,6 +1,6 @@
 # Spontapp Kanban
 
-Last updated: 2026-05-06
+Last updated: 2026-05-07
 
 ## Rules
 
@@ -21,10 +21,10 @@ Goal: Align MVP scope, wireframes, data model, app/API foundation, auth foundati
 
 | ID | Priority | Labels | Card | Primary | Support | Checkpoint | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| S0-001 | P0 | Product, Technical decision | Confirm MVP scope and technical direction | Martin + Nil | Team | 2026-05-06 | Vercel is now the agreed deployment target. Standup needs to confirm backend wiring shape and Sprint 0 deployment scope. |
+| S0-001 | P0 | Product, Technical decision | Confirm MVP scope and technical direction | Martin + Nil | Team | 2026-05-06 | Deployment direction is now Vercel monorepo projects: `spa/` and `auth-server/` deployed separately, with `api/` pending until real service code exists. Next technical decision is the minimal API shape and frontend/backend URL wiring. |
 | S0-002 | P0 | Data, Backend | Finalize data model and database plan | Nil | Samara + Martin | 2026-05-07 | Nil is organizing the data models. Before deploy/wiring, confirm the MVP subset needed now: users, events, event members/participants, and basic trust/connection fields. |
-| S0-003 | P0 | Foundation, Deployment | Create deployable app/API foundation | Nil | Martin + Samara + Patrick | 2026-05-07 | Vercel is chosen. Current code repo has a Next/shadcn scaffold and separate auth-server stub; standup should check build/deploy blockers, API/health route, and backend wiring approach. |
-| S0-005 | P0 | Auth, Frontend, Backend | Build auth foundation and prototype | Nil + Samara | Patrick | 2026-05-07 | Pages need to be ready enough before backend wiring is locked. Current code inspection shows scaffold/auth-server stub only, so standup should confirm owner and minimum auth screens/API shape for Thursday. |
+| S0-003 | P0 | Foundation, Deployment | Create deployable app/API foundation | Nil | Martin + Samara + Patrick | 2026-05-07 | `sponti-spa` and `sponti-auth` are deployed from `main`; auth `/health` is green. `api/` still has no real service code, so the API foundation remains open for minimal health route/scaffold. |
+| S0-005 | P0 | Auth, Frontend, Backend | Build auth foundation and prototype | Nil + Samara | Patrick | 2026-05-07 | Auth service is deployed and connected to MongoDB Atlas. Next work is frontend auth UI integration, CORS/origin config, and confirming register/login/me behavior against the deployed service. |
 | S0-006 | P0 | Design | Create main wireframes and visual rules | Patrick | Martin + Samara | 2026-05-06 | Patrick has started a Miro page. Martin helps Patrick finish wireframes today, 2026-05-06, before standup; goal is usable wireframe direction, not polished implementation. |
 
 ### Review
@@ -39,7 +39,6 @@ No confirmed blocked cards.
 
 | ID | Priority | Labels | Card | Primary | Support | Checkpoint | Done when / notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| S0-004 | P0 | Data, Deployment | Set up database and environment variables | Martin + Nil | Samara | 2026-05-07 | MongoDB Atlas/dev database is available, required secrets and URLs are documented/configured for Vercel/local environments, and the app can connect. Confirm owner and env var list at standup. |
 | S0-007 | P0 | Product, QA, Demo | Define acceptance criteria, demo path, and sprint review notes | Martin | Samara + Patrick + Team | 2026-05-08 | Core feature acceptance criteria, 5-7 minute demo path, and Friday sprint review notes are documented. |
 
 ### Done
@@ -47,6 +46,7 @@ No confirmed blocked cards.
 | ID | Priority | Labels | Card | Primary | Done date | Done note |
 | --- | --- | --- | --- | --- | --- | --- |
 | S0-008 | P0 | Process | Create Markdown Kanban board / GitHub project-board repo | Martin | 2026-05-05 | Public `Sponti-App/project-board` repo created and initial team-facing Kanban published. |
+| S0-004 | P0 | Data, Deployment | Set up database and environment variables | Martin + Nil | 2026-05-07 | MongoDB Atlas and Vercel env names are configured for deployed auth; `sponti-auth` can connect and `/health` returns green. Secret values are not documented in this repo. |
 
 ## Sprint 1 - Core MVP
 
