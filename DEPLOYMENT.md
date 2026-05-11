@@ -12,9 +12,9 @@ This document explains the current Vercel deployment setup for Spontapp / Sponti
 | --- | --- | --- | --- |
 | `sponti-spa` | `spa/` | Production deployment `Ready`; root and auth pages return 200 | https://sponti-spa.vercel.app |
 | `sponti-auth` | `auth-server/` | Production deployment `Ready`; health check green | https://sponti-auth.vercel.app/health |
-| `sponti-api` | `api/` | Production deployment `Ready`; `/health` is green, but protected `/api/v1/events` returns 500 | https://sponti-api-pi.vercel.app/health |
+| `sponti-api` | `api/` | Production deployment `Ready`; `/health` is green and protected routes now reach auth | https://sponti-api-pi.vercel.app/health |
 
-`sponti-api` is deployed, but protected API routes are not usable yet. Current public checks against `https://sponti-api-pi.vercel.app` show `/health` returns 200, `/` returns the API route-not-found response, and `GET /api/v1/events` returns 500. The current deployed code connects to Mongo before `/api/v1/*` routes, so a 500 on `/api/v1/events` even with an invalid bearer token points to a pre-auth runtime path such as Mongo connection/config rather than normal auth rejection.
+`sponti-api` is deployed and the previous pre-auth route crash is cleared. After rotating the Mongo URI and redeploying, current public checks against `https://sponti-api-pi.vercel.app` show `/health` returns 200, `/` returns the API route-not-found response, and `GET /api/v1/events` with an invalid bearer token returns 401. Next verification is an auth-issued token call against one protected API route.
 
 The project is named `sponti-api`, but the active production alias is currently `https://sponti-api-pi.vercel.app`. `https://sponti-api.vercel.app` is not the active alias and returns 404.
 
@@ -96,7 +96,7 @@ Do not paste these values into GitHub, Slack, screenshots, or docs.
 - Framework preset: Express
 - Current production alias: `https://sponti-api-pi.vercel.app`
 - Current deployment status: `Ready`
-- Current runtime status: `/health` is green; protected `/api/v1/events` returns 500
+- Current runtime status: `/health` is green; protected `/api/v1/events` reaches auth and returns 401 for an invalid token
 
 Expected public health endpoint:
 
@@ -144,8 +144,8 @@ Before treating a deployment as usable:
 
 ## Next Steps
 
-- Diagnose the protected route 500 on `GET https://sponti-api-pi.vercel.app/api/v1/events`.
-- Keep `GET https://sponti-api-pi.vercel.app/health` green.
+- Verify one auth-issued access token against `GET https://sponti-api-pi.vercel.app/api/v1/events`.
+- Keep `GET https://sponti-api-pi.vercel.app/health` green and monitor protected route behavior during create/feed integration.
 - Confirm the API alias the team wants to use for `NEXT_PUBLIC_API_BASE_URL`.
 - Confirm `NEXT_PUBLIC_AUTH_BASE_URL` and `NEXT_PUBLIC_API_BASE_URL` are set for the deployed SPA.
 - Smoke test deployed register/login/me before marking auth complete.
