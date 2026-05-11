@@ -1,6 +1,6 @@
 # Spontapp Kanban
 
-Last updated: 2026-05-07
+Last updated: 2026-05-11
 
 ## Rules
 
@@ -13,60 +13,63 @@ Last updated: 2026-05-07
 - Nil has final technical vote when architecture decisions are split.
 - MVP scope stays focused on auth, create meetup, feed, detail, RSVP, My Meetups, host controls, deployment, and seed data.
 
-## Sprint 0 - Current
+## Sprint 0 - Closed
 
 Goal: Align MVP scope, wireframes, data model, app/API foundation, auth foundation, and deployment path by Friday 2026-05-08.
 
-### In Progress
-
-| ID | Priority | Labels | Card | Primary | Support | Checkpoint | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| S0-001 | P0 | Product, Technical decision | Confirm MVP scope and technical direction | Martin + Nil | Team | 2026-05-06 | Deployment direction is now Vercel monorepo projects: `spa/` and `auth-server/` deployed separately, with `api/` pending until real service code exists. Next technical decision is the minimal API shape and frontend/backend URL wiring. |
-| S0-002 | P0 | Data, Backend | Finalize data model and database plan | Nil | Samara + Martin | 2026-05-07 | Nil is organizing the data models. Before deploy/wiring, confirm the MVP subset needed now: users, events, event members/participants, and basic trust/connection fields. |
-| S0-003 | P0 | Foundation, Deployment | Create deployable app/API foundation | Nil | Martin + Samara + Patrick | 2026-05-07 | `sponti-spa` and `sponti-auth` are deployed from `main`; auth `/health` is green. `api/` still has no real service code, so the API foundation remains open for minimal health route/scaffold. |
-| S0-005 | P0 | Auth, Frontend, Backend | Build auth foundation and prototype | Nil + Samara | Patrick | 2026-05-07 | Auth service is deployed and connected to MongoDB Atlas. Next work is frontend auth UI integration, CORS/origin config, and confirming register/login/me behavior against the deployed service. |
-| S0-006 | P0 | Design | Create main wireframes and visual rules | Patrick | Martin + Samara | 2026-05-06 | Patrick has started a Miro page. Martin helps Patrick finish wireframes today, 2026-05-06, before standup; goal is usable wireframe direction, not polished implementation. |
-
-### Review
-
-No cards currently in review.
-
-### Blocked
-
-No confirmed blocked cards.
-
-### Backlog
-
-| ID | Priority | Labels | Card | Primary | Support | Checkpoint | Done when / notes |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| S0-007 | P0 | Product, QA, Demo | Define acceptance criteria, demo path, and sprint review notes | Martin | Samara + Patrick + Team | 2026-05-08 | Core feature acceptance criteria, 5-7 minute demo path, and Friday sprint review notes are documented. |
+Sprint 0 is closed as of 2026-05-11. The foundation work is done enough for Sprint 1 to proceed; remaining work has been moved into Sprint 1 cards.
 
 ### Done
 
 | ID | Priority | Labels | Card | Primary | Done date | Done note |
 | --- | --- | --- | --- | --- | --- | --- |
+| S0-001 | P0 | Product, Technical decision | Confirm MVP scope and technical direction | Martin + Nil | 2026-05-08 | Vercel monorepo deployment direction confirmed: `spa/`, `auth-server/`, and `api/` are separate Vercel projects. Sprint 1 remains focused on the true MVP flow. |
+| S0-002 | P0 | Data, Backend | Finalize data model and database plan | Nil | 2026-05-08 | API models/routes exist. Sprint 1 will narrow implementation focus to the MVP flow. |
+| S0-003 | P0 | Foundation, Deployment | Create deployable app/API foundation | Nil | 2026-05-08 | `sponti-spa`, `sponti-auth`, and `sponti-api` production deployments exist. API runtime health is tracked in Sprint 1. |
+| S0-004 | P0 | Data, Deployment | Set up database and environment variables | Martin + Nil | 2026-05-07 | MongoDB Atlas and Vercel env names are configured for deployed auth. Secret values are not documented here. |
+| S0-005 | P0 | Auth, Frontend, Backend | Build auth foundation and prototype | Nil + Samara | 2026-05-08 | Auth service is deployed and health is green; SPA auth pages and client wiring exist. Sprint 1 owns full auth smoke testing. |
+| S0-006 | P0 | Design | Create main wireframes and visual rules | Patrick | 2026-05-08 | Core UI/page direction exists in the SPA. Sprint 1 owns MVP flow UX review. |
+| S0-007 | P0 | Product, QA, Demo | Define acceptance criteria, demo path, and sprint review notes | Martin | 2026-05-08 | Sprint review inputs are captured; Sprint 1 owns smoke checklist and demo data. |
 | S0-008 | P0 | Process | Create Markdown Kanban board / GitHub project-board repo | Martin | 2026-05-05 | Public `Sponti-App/project-board` repo created and initial team-facing Kanban published. |
-| S0-004 | P0 | Data, Deployment | Set up database and environment variables | Martin + Nil | 2026-05-07 | MongoDB Atlas and Vercel env names are configured for deployed auth; `sponti-auth` can connect and `/health` returns green. Secret values are not documented in this repo. |
+
+### Key Lessons
+
+- Vercel Root Directory must match each service folder: `spa`, `auth-server`, `api`.
+- A Vercel deployment can be `Ready` while the runtime route is still failing; public health checks and runtime logs are required before marking a service usable.
+- The API production alias is currently `https://sponti-api-pi.vercel.app`; `https://sponti-api.vercel.app` is not the active alias.
+- API and auth JWT secrets must match before authenticated API routes can work with auth-issued access tokens.
 
 ## Sprint 1 - Core MVP
 
 Goal: Build the true MVP flow end to end by Friday 2026-05-15.
 
+### Blocked
+
+| ID | Priority | Labels | Card | Primary | Support | Checkpoint | Blocker |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| S1-007 | P0 | Deployment, QA | Deployed MVP integration and smoke checklist | Nil + Martin | Samara | 2026-05-15 | `sponti-api` production deploy is `Ready` but runtime health returns 500. Fix API runtime first, then verify auth/API/SPA integration. |
+
+### In Progress
+
+| ID | Priority | Labels | Card | Primary | Support | Checkpoint | Current status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| S1-001 | P0 | Auth, App shell | Complete auth and protected app shell | Nil | Samara | 2026-05-15 | SPA login/register pages load in production; auth `/health` is green and unauthenticated `/auth/me` returns 401 as expected. Need deployed register/login/me smoke test and protected-route verification. |
+| S1-002 | P0 | Events, Create flow | Create meetup vertical slice | Samara | Nil + Patrick | 2026-05-12 | API event routes and models exist, but deployed API runtime must be fixed before frontend integration can be verified. |
+| S1-006 | P0 | Demo, Data | Demo data and seed reset | Martin | Samara | 2026-05-15 | Define seed/reset expectations after API runtime is healthy. |
+
 ### Backlog
 
 | ID | Priority | Labels | Card | Primary | Support | Checkpoint | Done when |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| S1-001 | P0 | Auth, App shell | Complete auth and protected app shell | Nil | Samara | 2026-05-15 | User can register/login/logout, current-user state works, and protected pages reject logged-out users. |
-| S1-002 | P0 | Events, Create flow | Create meetup vertical slice | Samara | Nil + Patrick | 2026-05-12 | User can create a meetup through the UI; event and participant records are created; required validation and useful errors exist. |
 | S1-003 | P0 | Feed, Detail | Feed and detail vertical slice | Nil + Samara | Patrick | 2026-05-13 | Feed returns visible, non-cancelled meetups sorted by start time; detail page shows host, time, location, description, visibility, capacity/participants, and current user state. |
 | S1-004 | P0 | RSVP | RSVP join/leave vertical slice | Samara | Nil | 2026-05-13 | User can join, leave, or update RSVP safely from the UI; duplicate participation is prevented. |
 | S1-005 | P0 | My Meetups, Host controls | My Meetups and host controls | Samara | Martin + Nil | 2026-05-15 | Created and joined meetups are visible; only the host can edit or cancel their own meetup. |
-| S1-006 | P0 | Demo, Data | Demo data and seed reset | Martin | Samara | 2026-05-15 | Demo users, friendships/trust context, meetups, and participants can be recreated quickly before review or rehearsal. |
-| S1-007 | P0 | Deployment, QA | Deployed MVP integration and smoke checklist | Nil + Martin | Samara | 2026-05-15 | Deployed app supports auth, create, feed, detail, RSVP, and My Meetups; smoke checklist passes on the deployed environment. |
+| S1-012 | P1 | Maps, Frontend, UX | Get Google Maps API working for event location UI | Patrick | Samara + Martin | 2026-05-15 | Deployed SPA has the required public Google Maps env vars configured, map/location UI renders without key/config errors, and the key is restricted appropriately before demo use. |
 | S1-008 | P1 | QA, Process | Basic automated checks before merge | Nil | Samara | 2026-05-15 | At least lint/build or minimal API route checks run before important P0 merges. |
 | S1-009 | P1 | Friends, Trust | Basic friendship flow | Nil | Samara | After P0 flow is green | Add/request/accept works if the team decides this is needed beyond seeded trust context. |
 | S1-010 | P1 | RSVP | Capacity enforcement | Samara | Nil | After RSVP is stable | Joining is blocked when max participants is reached. |
 | S1-011 | P1 | Comments | Event comments | Nil + Samara | Patrick | After MVP is green | Simple event comments work end to end only if the core MVP flow is already stable. |
+| S1-013 | P2 | Calendar, Research | Research Google Calendar event export/integration | Martin | Patrick | Research only during Sprint 1 | Document feasible options for "put this event in your calendar" without implementing OAuth or calendar write access yet. Recommend the lowest-risk MVP option, likely an `.ics` download or Google Calendar URL. |
 
 ## Sprint 2 - Freeze / Demo
 

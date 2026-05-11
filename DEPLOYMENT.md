@@ -1,6 +1,6 @@
 # Spontapp Deployment
 
-Last updated: 2026-05-07
+Last updated: 2026-05-11
 
 ## Purpose
 
@@ -10,11 +10,15 @@ This document explains the current Vercel deployment setup for Spontapp / Sponti
 
 | Vercel project | Repo folder | Status | URL |
 | --- | --- | --- | --- |
-| `sponti-spa` | `spa/` | Deployed | https://sponti-spa.vercel.app |
-| `sponti-auth` | `auth-server/` | Deployed, health check green | https://sponti-auth.vercel.app/health |
-| `sponti-api` | `api/` | Pending | Not deployed yet |
+| `sponti-spa` | `spa/` | Production deployment `Ready`; root and auth pages return 200 | https://sponti-spa.vercel.app |
+| `sponti-auth` | `auth-server/` | Production deployment `Ready`; health check green | https://sponti-auth.vercel.app/health |
+| `sponti-api` | `api/` | Production deployment `Ready`, but runtime health is failing with 500 | https://sponti-api-pi.vercel.app/health |
 
-`sponti-api` is pending because the `api/` folder does not contain a real API service yet.
+`sponti-api` is deployed, but not usable yet. Current public checks against `https://sponti-api-pi.vercel.app`, `/health`, and `/api/v1/events` return `500 FUNCTION_INVOCATION_FAILED`. Runtime logs point to a Mongoose ESM import issue: `mongoose` does not provide a named `models` export.
+
+The project is named `sponti-api`, but the active production alias is currently `https://sponti-api-pi.vercel.app`. `https://sponti-api.vercel.app` is not the active alias and returns 404.
+
+Latest preview observation: branch `feat/api_mid` has new Vercel previews for all three projects. `sponti-auth` and `sponti-api` previews show `Ready`; `sponti-spa` preview shows `Error`. The preview URLs are protected by Vercel Authentication, so public route health could not be verified from the browser check.
 
 ## Monorepo Setup
 
@@ -80,14 +84,32 @@ Do not paste these values into GitHub, Slack, screenshots, or docs.
 
 ### Main API: `sponti-api`
 
-No real API service exists yet. When the team is ready, start with a minimal deployed health check before adding business routes.
+- Root Directory: `api`
+- Framework preset: Express
+- Current production alias: `https://sponti-api-pi.vercel.app`
+- Current deployment status: `Ready`
+- Current runtime status: failing with `500 FUNCTION_INVOCATION_FAILED`
 
-Recommended first endpoints:
+Expected public health endpoint:
 
 ```text
-GET /
 GET /health
 ```
+
+Expected response after the runtime issue is fixed:
+
+```json
+{"data":{"status":"ok","service":"sponti-api"}}
+```
+
+Required secret environment variable names:
+
+- `MONGO_URI`
+- `DB_NAME`
+- `CLIENT_BASE_URL`
+- `ACCESS_JWT_SECRET`
+
+`ACCESS_JWT_SECRET` must match the auth service JWT signing secret so auth-issued access tokens work against `/api/v1/*`.
 
 ## MongoDB Atlas Notes
 
@@ -114,7 +136,9 @@ Before treating a deployment as usable:
 
 ## Next Steps
 
-- Add `NEXT_PUBLIC_AUTH_API_URL` to the frontend when auth UI integration starts.
-- Add CORS rules so `sponti-spa` can call `sponti-auth` safely.
-- Create the initial `api/` service only when the team agrees on the minimum API shape.
-- Add `sponti-api` to Vercel after `api/` has a real health endpoint.
+- Fix the API runtime Mongoose import issue and redeploy `sponti-api`.
+- Re-check `GET https://sponti-api-pi.vercel.app/health`.
+- Confirm the API alias the team wants to use for `NEXT_PUBLIC_API_BASE_URL`.
+- Confirm `NEXT_PUBLIC_AUTH_BASE_URL` and `NEXT_PUBLIC_API_BASE_URL` are set for the deployed SPA.
+- Smoke test deployed register/login/me before marking auth complete.
+- Smoke test create, feed, detail, RSVP, and My Meetups after API health is green.

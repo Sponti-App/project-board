@@ -1,6 +1,6 @@
 # Spontapp Project Brief
 
-Last updated: 2026-05-05
+Last updated: 2026-05-11
 
 ## Product Summary
 
@@ -49,22 +49,14 @@ The demo must be supported by deployed frontend/backend/database services and st
 
 ## Current Technical Direction
 
-The team is reviewing a possible move from the original WBS-style plan:
+The current implementation direction is a Vercel monorepo with one Vercel project per service:
 
-- React + Vite frontend
-- Node/Express backend
-- MongoDB Atlas + Mongoose
-- Render deployment
+- `spa/`: Next.js frontend, deployed as `sponti-spa`.
+- `auth-server/`: Express authentication service, deployed as `sponti-auth`.
+- `api/`: Express main business API, deployed as `sponti-api`.
+- MongoDB Atlas + Mongoose for persistence.
 
-to a more Vercel-native direction:
-
-- Next.js App Router
-- Vercel deployment
-- shadcn/ui + Tailwind for fast UI prototyping
-- MongoDB Atlas + Mongoose
-- backend via Next.js route handlers, unless Nil decides a separate Express API is clearer
-
-This decision should be confirmed by the team, with Nil holding the final technical vote.
+Sprint 1 should stabilize this deployed shape rather than reopening framework or deployment decisions. Nil keeps final technical vote on implementation details.
 
 ## Cut / Deferred For MVP
 
@@ -83,4 +75,3 @@ These should not block the May 20 freeze:
 - background group-chat bot
 
 AI-assisted event creation is stretch only. The app must work without AI.
-
