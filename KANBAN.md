@@ -47,15 +47,16 @@ Goal: Build the true MVP flow end to end by Friday 2026-05-15.
 
 | ID | Priority | Labels | Card | Primary | Support | Checkpoint | Blocker |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| S1-007 | P0 | Deployment, QA | Deployed MVP integration and smoke checklist | Nil + Martin | Samara | 2026-05-15 | `sponti-api` production deploy is `Ready` but runtime health returns 500. Fix API runtime first, then verify auth/API/SPA integration. |
+| S1-007 | P0 | Deployment, QA | Deployed MVP integration and smoke checklist | Martin | Nil + Samara | 2026-05-15 | Martin owns Vercel access/config/deploy checks. `sponti-api` production `/health` is green, but protected route `GET /api/v1/events` returns 500. Nil owns API code/runtime diagnosis; Samara depends on this for frontend integration. |
 
 ### In Progress
 
 | ID | Priority | Labels | Card | Primary | Support | Checkpoint | Current status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | S1-001 | P0 | Auth, App shell | Complete auth and protected app shell | Nil | Samara | 2026-05-15 | SPA login/register pages load in production; auth `/health` is green and unauthenticated `/auth/me` returns 401 as expected. Need deployed register/login/me smoke test and protected-route verification. |
-| S1-002 | P0 | Events, Create flow | Create meetup vertical slice | Samara | Nil + Patrick | 2026-05-12 | API event routes and models exist, but deployed API runtime must be fixed before frontend integration can be verified. |
-| S1-006 | P0 | Demo, Data | Demo data and seed reset | Martin | Samara | 2026-05-15 | Define seed/reset expectations after API runtime is healthy. |
+| S1-002 | P0 | Events, Create flow | Create meetup vertical slice | Samara | Nil + Patrick | 2026-05-12 | API event routes and models exist; `GET /api/v1/events` currently returns 500, so protected route behavior must be verified before create/feed integration can be trusted. |
+| S1-006 | P0 | Demo, Data | Demo data and seed reset | Martin | Samara | 2026-05-15 | Define seed/reset expectations after protected API route behavior is clear. |
+| S1-014 | P0 | Frontend, Routing, UX | Complete MVP page/route gap audit | Patrick | Samara + Martin | 2026-05-11 | Current code has home, auth, menu pages, circles, event hub/create/edit, profile/edit, notifications popover, QR share component, and map component. Missing or unclear against the Miro map: event detail route page, settings/account settings, notification settings page, standalone QR/share page, and explicit manage-friends flow. Mark each as build now, fold into existing page, or defer. |
 
 ### Backlog
 

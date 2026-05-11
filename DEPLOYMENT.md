@@ -12,13 +12,13 @@ This document explains the current Vercel deployment setup for Spontapp / Sponti
 | --- | --- | --- | --- |
 | `sponti-spa` | `spa/` | Production deployment `Ready`; root and auth pages return 200 | https://sponti-spa.vercel.app |
 | `sponti-auth` | `auth-server/` | Production deployment `Ready`; health check green | https://sponti-auth.vercel.app/health |
-| `sponti-api` | `api/` | Production deployment `Ready`, but runtime health is failing with 500 | https://sponti-api-pi.vercel.app/health |
+| `sponti-api` | `api/` | Production deployment `Ready`; `/health` is green, but protected `/api/v1/events` returns 500 | https://sponti-api-pi.vercel.app/health |
 
-`sponti-api` is deployed, but not usable yet. Current public checks against `https://sponti-api-pi.vercel.app`, `/health`, and `/api/v1/events` return `500 FUNCTION_INVOCATION_FAILED`. Runtime logs point to a Mongoose ESM import issue: `mongoose` does not provide a named `models` export.
+`sponti-api` is deployed, but protected API routes are not usable yet. Current public checks against `https://sponti-api-pi.vercel.app` show `/health` returns 200, `/` returns the API route-not-found response, and `GET /api/v1/events` returns 500. The current deployed code connects to Mongo before `/api/v1/*` routes, so a 500 on `/api/v1/events` even with an invalid bearer token points to a pre-auth runtime path such as Mongo connection/config rather than normal auth rejection.
 
 The project is named `sponti-api`, but the active production alias is currently `https://sponti-api-pi.vercel.app`. `https://sponti-api.vercel.app` is not the active alias and returns 404.
 
-Latest preview observation: branch `feat/api_mid` has new Vercel previews for all three projects. `sponti-auth` and `sponti-api` previews show `Ready`; `sponti-spa` preview shows `Error`. The preview URLs are protected by Vercel Authentication, so public route health could not be verified from the browser check.
+Earlier preview observation: branch `feat/api_mid` had Vercel previews for all three projects. That branch no longer appears as a remote branch after the latest fetch; production `sponti-api` is now deployed from `main` commit `e974816`.
 
 ## Monorepo Setup
 
@@ -45,6 +45,14 @@ Recommended team flow:
 ```text
 feature branch -> pull request -> Vercel Preview -> review/test -> merge to main -> Production
 ```
+
+## Ownership
+
+Martin owns Vercel access, project configuration, environment-variable checks, redeploys, and deployment-status verification. Codex may assist Martin locally with Vercel checks from Martin's environment.
+
+Nil owns the implementation/runtime fixes in the codebase when a deployed service fails because of API, auth, database, or build code. Samara and Patrick should treat Vercel configuration questions as routed through Martin, not as something they need direct Vercel access for.
+
+Secret values must stay out of GitHub, Slack, screenshots, and docs.
 
 ## Service Notes
 
@@ -88,7 +96,7 @@ Do not paste these values into GitHub, Slack, screenshots, or docs.
 - Framework preset: Express
 - Current production alias: `https://sponti-api-pi.vercel.app`
 - Current deployment status: `Ready`
-- Current runtime status: failing with `500 FUNCTION_INVOCATION_FAILED`
+- Current runtime status: `/health` is green; protected `/api/v1/events` returns 500
 
 Expected public health endpoint:
 
@@ -136,8 +144,8 @@ Before treating a deployment as usable:
 
 ## Next Steps
 
-- Fix the API runtime Mongoose import issue and redeploy `sponti-api`.
-- Re-check `GET https://sponti-api-pi.vercel.app/health`.
+- Diagnose the protected route 500 on `GET https://sponti-api-pi.vercel.app/api/v1/events`.
+- Keep `GET https://sponti-api-pi.vercel.app/health` green.
 - Confirm the API alias the team wants to use for `NEXT_PUBLIC_API_BASE_URL`.
 - Confirm `NEXT_PUBLIC_AUTH_BASE_URL` and `NEXT_PUBLIC_API_BASE_URL` are set for the deployed SPA.
 - Smoke test deployed register/login/me before marking auth complete.

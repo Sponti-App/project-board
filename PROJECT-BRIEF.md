@@ -27,8 +27,8 @@ The demo must be supported by deployed frontend/backend/database services and st
 
 | Person | Role | Main responsibilities |
 | --- | --- | --- |
-| Martin | Project / product coordination | Scope, board, mentor prep, decision tracking, acceptance criteria, QA/smoke tests, demo story, seed/demo data, AI-supported workflow. |
-| Nil | Technical Lead | Architecture, app/repo skeleton, backend foundation, auth, deployment setup, API structure, CORS/env, code quality, technical blockers. |
+| Martin | Project / product coordination | Scope, board, mentor prep, decision tracking, acceptance criteria, QA/smoke tests, demo story, seed/demo data, Vercel access/config coordination, AI-supported workflow. |
+| Nil | Technical Lead | Architecture, app/repo skeleton, backend foundation, auth, API structure, CORS/env requirements, code quality, technical blockers, runtime fixes. |
 | Samara | Implementation Lead | Feature delivery, frontend/backend integration, event models/routes, create flow, RSVP, detail page, validation, feature QA. |
 | Patrick | UX/UI Lead | Wireframes, user flows, visual system, create-flow UX, responsive/design QA, screenshots, presentation visuals. |
 

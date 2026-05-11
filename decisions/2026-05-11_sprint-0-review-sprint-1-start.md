@@ -7,18 +7,18 @@ Sprint naming: Sprint 1 starts today, Monday 2026-05-11.
 
 Sprint 0 achieved the deployment foundation: `sponti-spa`, `sponti-auth`, and `sponti-api` all exist as Vercel projects with the expected root directories. `sponti-spa` and `sponti-auth` are production-ready enough for Sprint 1 integration checks: the SPA loads, auth pages load, auth `/health` is green, and unauthenticated `/auth/me` returns 401 as expected.
 
-The main carry-over is `sponti-api`: production deployment is `Ready`, but runtime requests fail with `500 FUNCTION_INVOCATION_FAILED`. Runtime logs point to a Mongoose ESM import problem: named import `models` from `mongoose`. A `feat/api_mid` branch appears to address this pattern, but it is not merged to `main` and its protected preview health could not be publicly verified.
+The main carry-over is `sponti-api`: production deployment is `Ready` and `/health` is green, but protected API routes are not usable yet. `GET /api/v1/events` returns 500, including when called with an invalid bearer token. The currently deployed code connects to Mongo before `/api/v1/*` routes, so the failure appears to happen before normal auth rejection.
 
 ## Current Verified State
 
 | Area | Status | Evidence |
 | --- | --- | --- |
-| Main repo | `Sponti-App/Sponti` default branch is `main`; latest `main` commit checked is `7b38c258` from PR #16. | GitHub repo/commit/PR check. |
+| Main repo | `Sponti-App/Sponti` default branch is `main`; latest `main` commit checked is `e974816` from PR #18. | GitHub repo/commit/PR check. |
 | Open PRs/issues | No open PRs or issues found in `Sponti-App/Sponti` or `Sponti-App/project-board`. | GitHub PR/issue list. |
-| Preview branch | Branch `feat/api_mid` exists at `648831e`; latest Vercel previews were created from it. | GitHub branch list and Vercel deployment list. |
+| Preview branch | Earlier branch `feat/api_mid` no longer appears as a remote branch after the latest fetch. | GitHub branch list. |
 | `sponti-spa` | Production `Ready`; root, `/login`, and `/register` return 200. Root Directory is `spa`. | Vercel inspect and HTTP checks. |
 | `sponti-auth` | Production `Ready`; `/health` returns `{"status":"ok","service":"auth-server"}`; unauthenticated `/auth/me` returns 401. Root Directory is `auth-server`. | Vercel inspect and HTTP checks. |
-| `sponti-api` | Production `Ready`, but runtime health fails. Root Directory is `api`. Active production alias is `https://sponti-api-pi.vercel.app`. | Vercel inspect, HTTP checks, runtime logs. |
+| `sponti-api` | Production `Ready`; `/health` returns service `sponti-api`, but `GET /api/v1/events` returns 500. Root Directory is `api`. Active production alias is `https://sponti-api-pi.vercel.app`. | Vercel inspect, HTTP checks, runtime logs. |
 
 ## Sprint 0 Review
 
@@ -41,8 +41,8 @@ Partially completed:
 
 Carried over:
 
-- Fix and redeploy `sponti-api`.
-- Verify deployed API `/health`.
+- Diagnose the protected route 500 on `sponti-api`.
+- Keep deployed API `/health` green.
 - Confirm deployed SPA `NEXT_PUBLIC_AUTH_BASE_URL` and `NEXT_PUBLIC_API_BASE_URL`.
 - Smoke test auth against production.
 - Build and verify create, feed, detail, RSVP, My Meetups, host controls, and seed/demo data.
@@ -66,10 +66,10 @@ Remaining blockers:
 
 | Category | Blocker | Owner |
 | --- | --- | --- |
-| Deployment | `sponti-api` production returns 500 on `/`, `/health`, `/api/health`, and `/api/v1/events`. | Nil |
+| Deployment | `sponti-api` production `/health` is green, but `GET /api/v1/events` returns 500 even with an invalid bearer token. | Nil |
 | Deployment | Latest `feat/api_mid` `sponti-spa` preview shows Vercel `Error`; `sponti-auth` and `sponti-api` previews show `Ready` but protected. | Nil + Patrick/Samara depending on failing SPA build surface |
-| API/backend | Runtime log: `mongoose` does not provide named export `models`. `main` imports `models` from `mongoose` in API models. | Nil |
-| API/backend | Verify API env names exist in production: `MONGO_URI`, `DB_NAME`, `CLIENT_BASE_URL`, `ACCESS_JWT_SECRET`; do not expose values. | Nil + Martin |
+| API/backend | The deployed `main` code has the Mongoose named-import fix, but `/api/v1/events` still returns 500. Recent Vercel request logs show the 500 request rows but no app stack trace. | Nil |
+| API/backend | Verify API env names exist in production: `MONGO_URI`, `DB_NAME`, `CLIENT_BASE_URL`, `ACCESS_JWT_SECRET`; do not expose values. | Martin |
 | Frontend integration | SPA needs confirmed production `NEXT_PUBLIC_AUTH_BASE_URL` and `NEXT_PUBLIC_API_BASE_URL`. | Nil + Samara |
 | Frontend integration | Google Maps API needs to be configured and verified for event location UI. | Patrick |
 | Frontend integration | Create/feed/detail/RSVP cannot be verified against production until API health is green. | Samara + Nil |
@@ -79,8 +79,8 @@ Remaining blockers:
 
 ## Sprint 1 Priorities
 
-1. Fix `sponti-api` runtime and redeploy production.
-   Acceptance: `GET https://sponti-api-pi.vercel.app/health` returns 200 with service `sponti-api`; runtime logs have no import crash.
+1. Diagnose `sponti-api` protected route 500.
+   Acceptance: `GET https://sponti-api-pi.vercel.app/health` stays 200 with service `sponti-api`; `GET /api/v1/events` returns the expected auth/domain response instead of 500.
 
 2. Verify auth/API JWT compatibility.
    Acceptance: an auth-issued access token can call one protected API route and receives expected success or domain-level validation, not token rejection due to secret/payload mismatch.
@@ -110,18 +110,20 @@ Remaining blockers:
 
 - Martin: board/status, acceptance criteria, smoke checklist, demo data/reset plan, Sprint 1 coordination.
 - Martin: Google Calendar research for event calendar handoff; research only at this stage.
-- Nil: API runtime fix, deployment health, JWT/env compatibility, technical review, merge readiness.
+- Martin: Vercel access/config/redeploy checks, with Codex assisting locally from Martin's environment.
+- Nil: API runtime fix, JWT compatibility requirements, technical review, merge readiness.
 - Samara: frontend/backend integration, create flow, RSVP, My Meetups, feature QA.
 - Patrick: Google Maps API setup for location UI, create/detail/RSVP UX review, responsive polish, visual QA, demo screenshots.
 
 ## What To Do First Today
 
-1. Nil verifies or merges the minimal API runtime fix from `feat/api_mid`, then redeploys `sponti-api`.
-2. Martin/Nil re-check API production health and alias.
-3. Nil/Samara verify one auth token against one protected API route.
-4. Samara starts create-flow wiring only after API health is green.
-5. Patrick checks Google Maps API env/config and reviews the create/detail/RSVP screens for obvious UX blockers.
-6. Martin captures Google Calendar integration options without starting implementation.
+1. Martin/Codex verify Vercel env presence and runtime logs without exposing secret values.
+2. Nil diagnoses why protected API routes return 500 while `/health` is green.
+3. Martin/Nil re-check API production health and alias.
+4. Nil/Samara verify one auth token against one protected API route.
+5. Samara starts create-flow wiring only after protected API route behavior is clear.
+6. Patrick checks Google Maps API env/config and reviews the create/detail/RSVP screens for obvious UX blockers.
+7. Martin captures Google Calendar integration options without starting implementation.
 
 ## Can Wait
 
@@ -144,6 +146,6 @@ The board previously said `Sprint 0 - Current`; it is now updated to `Sprint 0 -
 
 ## Could Not Verify
 
-- Protected Vercel preview route health for `feat/api_mid`; previews returned Vercel Authentication pages.
+- Current protected API route root cause; production request logs show 500 rows but no app stack trace.
 - Actual secret presence or values; intentionally not inspected or documented.
 - Full register/login flow with real demo credentials; no credentials were used.
