@@ -17,6 +17,7 @@ This repository is the team-facing Markdown Kanban mirror for the Spontapp final
 - Do not treat this repository as the full documentation workspace.
 - Do not modify implementation repositories from here.
 - Do not commit or push unless Martin explicitly asks.
+- When drafting team-facing updates or Slack-ready messages for Martin to send, end the drafted message with the signature: `Codex, Sponti-app Copilot`.
 
 ## Source Inputs
 
