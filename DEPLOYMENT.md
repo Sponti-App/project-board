@@ -11,14 +11,14 @@ This document explains the current Vercel deployment setup for Spontapp / Sponti
 | Vercel project | Repo folder | Status | URL |
 | --- | --- | --- | --- |
 | `sponti-spa` | `spa/` | Production deployment `Ready`; root and auth pages return 200 | https://sponti-spa.vercel.app |
-| `sponti-auth` | `auth-server/` | Production deployment `Ready`; health check green | https://sponti-auth.vercel.app/health |
-| `sponti-api` | `api/` | Production deployment `Ready`; `/health` is green and protected routes now reach auth | https://sponti-api-pi.vercel.app/health |
+| `sponti-auth` | `auth-server/` | Production deployment `Ready`; auth smoke green | https://sponti-auth.vercel.app/health |
+| `sponti-api` | `api/` | Production deployment `Ready`; `/health` and event CRUD-by-ID smoke green, feed/list routes return 500 | https://sponti-api-pi.vercel.app/health |
 
-`sponti-api` is deployed and the previous pre-auth route crash is cleared. After rotating the Mongo URI and redeploying, current public checks against `https://sponti-api-pi.vercel.app` show `/health` returns 200, `/` returns the API route-not-found response, and `GET /api/v1/events` with an invalid bearer token returns 401. Next verification is an auth-issued token call against one protected API route.
+`sponti-api` is deployed and the previous pre-auth route crash is cleared. After rotating the Mongo URI and redeploying, `GET /api/v1/events` with an invalid bearer token returns 401 instead of 500. With a real auth-issued token, event create, read by ID, update, RSVP/membership update, and cancel pass. The remaining backend issue is the list/feed-style route group returning 500: `GET /api/v1/events`, `/api/v1/events/calendar/upcoming`, `/api/v1/events/map/active`, `/api/v1/connections`, and `/api/v1/users/search`.
 
 The project is named `sponti-api`, but the active production alias is currently `https://sponti-api-pi.vercel.app`. `https://sponti-api.vercel.app` is not the active alias and returns 404.
 
-Earlier preview observation: branch `feat/api_mid` had Vercel previews for all three projects. That branch no longer appears as a remote branch after the latest fetch; production `sponti-api` is now deployed from `main` commit `e974816`.
+Production deployments are from `Sponti-App/Sponti` `main`. Latest checked `main` and deployed auth/API commit is `86f0415`.
 
 ## Monorepo Setup
 
@@ -86,7 +86,10 @@ Expected response:
 Required secret environment variable names:
 
 - `MONGO_URI`
-- `JWT_SECRET`
+- `ACCESS_JWT_SECRET`
+- `REFRESH_JWT_SECRET`
+
+`ACCESS_JWT_SECRET` must match `sponti-api` `ACCESS_JWT_SECRET`. `JWT_SECRET` may still exist in Vercel as an old variable, but current `main` auth code uses `ACCESS_JWT_SECRET` and `REFRESH_JWT_SECRET`.
 
 Do not paste these values into GitHub, Slack, screenshots, or docs.
 
@@ -96,7 +99,7 @@ Do not paste these values into GitHub, Slack, screenshots, or docs.
 - Framework preset: Express
 - Current production alias: `https://sponti-api-pi.vercel.app`
 - Current deployment status: `Ready`
-- Current runtime status: `/health` is green; protected `/api/v1/events` reaches auth and returns 401 for an invalid token
+- Current runtime status: `/health` is green; event CRUD-by-ID works with a real token; feed/list-style routes return 500
 
 Expected public health endpoint:
 
@@ -104,7 +107,7 @@ Expected public health endpoint:
 GET /health
 ```
 
-Expected response after the runtime issue is fixed:
+Expected response:
 
 ```json
 {"data":{"status":"ok","service":"sponti-api"}}
@@ -144,9 +147,7 @@ Before treating a deployment as usable:
 
 ## Next Steps
 
-- Verify one auth-issued access token against `GET https://sponti-api-pi.vercel.app/api/v1/events`.
-- Keep `GET https://sponti-api-pi.vercel.app/health` green and monitor protected route behavior during create/feed integration.
-- Confirm the API alias the team wants to use for `NEXT_PUBLIC_API_BASE_URL`.
-- Confirm `NEXT_PUBLIC_AUTH_BASE_URL` and `NEXT_PUBLIC_API_BASE_URL` are set for the deployed SPA.
-- Smoke test deployed register/login/me before marking auth complete.
-- Smoke test create, feed, detail, RSVP, and My Meetups after API health is green.
+- Diagnose the 500s on `GET /api/v1/events`, `/api/v1/events/calendar/upcoming`, `/api/v1/events/map/active`, `/api/v1/connections`, and `/api/v1/users/search`.
+- Add sanitized server logging or local reproduction for the failing list/feed routes, because current Vercel logs show request rows without stack traces.
+- Keep `GET https://sponti-api-pi.vercel.app/health` green and preserve the passing auth/event CRUD-by-ID smoke path.
+- Browser-smoke the deployed frontend auth and create-flow UX against the current production services.

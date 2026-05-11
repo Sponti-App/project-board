@@ -45,16 +45,18 @@ Goal: Build the true MVP flow end to end by Friday 2026-05-15.
 
 ### Blocked
 
-No cards currently blocked.
+| ID | Priority | Labels | Card | Primary | Support | Checkpoint | Blocker |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| S1-003 | P0 | Feed, Detail | Feed and detail vertical slice | Nil + Samara | Patrick | 2026-05-13 | Real-token smoke test passes event create/read/update/RSVP/cancel by ID, but list/feed-style API routes return 500: `GET /api/v1/events`, `/events/calendar/upcoming`, `/events/map/active`, `/connections`, and `/users/search`. Nil owns backend diagnosis; Samara depends on feed/list responses for frontend integration. |
 
 ### In Progress
 
 | ID | Priority | Labels | Card | Primary | Support | Checkpoint | Current status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| S1-001 | P0 | Auth, App shell | Complete auth and protected app shell | Nil | Samara | 2026-05-15 | SPA login/register pages load in production; auth `/health` is green and unauthenticated `/auth/me` returns 401 as expected. Need deployed register/login/me smoke test and protected-route verification. |
-| S1-002 | P0 | Events, Create flow | Create meetup vertical slice | Samara | Nil + Patrick | 2026-05-12 | API event routes and models exist; after Mongo URI rotation and redeploy, `GET /api/v1/events` with an invalid token now returns 401 instead of 500. Next: verify with a real auth-issued token and continue create/feed integration. |
+| S1-001 | P0 | Auth, App shell | Complete auth and protected app shell | Nil | Samara | 2026-05-15 | Auth production smoke is green after env update/redeploy: register, login, me, refresh, and logout all pass. Frontend protected-route UX still needs browser-level verification. |
+| S1-002 | P0 | Events, Create flow | Create meetup vertical slice | Samara | Nil + Patrick | 2026-05-12 | Real-token API smoke passes event create, read by ID, update, RSVP/membership update, and cancel. Next: wire/verify the deployed frontend create flow; feed/list integration remains blocked by S1-003. |
 | S1-006 | P0 | Demo, Data | Demo data and seed reset | Martin | Samara | 2026-05-15 | Define seed/reset expectations now that protected API routes reach auth instead of crashing before auth. |
-| S1-007 | P0 | Deployment, QA | Deployed MVP integration and smoke checklist | Martin | Nil + Samara | 2026-05-15 | Martin owns Vercel access/config/deploy checks. `sponti-api` production `/health` is green, and `GET /api/v1/events` with an invalid token now returns 401 after Mongo URI rotation and redeploy. Next: auth-issued token smoke test and frontend integration checks. |
+| S1-007 | P0 | Deployment, QA | Deployed MVP integration and smoke checklist | Martin | Nil + Samara | 2026-05-15 | Vercel env/deploy checks are current. `sponti-spa`, `sponti-auth`, and `sponti-api` are Ready; auth smoke and event CRUD-by-ID smoke pass. Remaining API smoke failures are tracked in S1-003. |
 | S1-014 | P0 | Frontend, Routing, UX | Complete MVP page/route gap audit | Patrick | Samara + Martin | 2026-05-11 | Current code has home, auth, menu pages, circles, event hub/create/edit, profile/edit, notifications popover, QR share component, and map component. Missing or unclear against the Miro map: event detail route page, settings/account settings, notification settings page, standalone QR/share page, and explicit manage-friends flow. Mark each as build now, fold into existing page, or defer. |
 | S1-015 | P1 | Product, Onboarding, UX | Define onboarding flow | Martin | Patrick + Samara | 2026-05-15 | Create the onboarding flow from the Miro sequence: welcome/what is Sponti, permissions/location prompt, import-friends decision point, and create-profile step. Keep this as flow definition first; contact import implementation remains out of P0 unless the team explicitly pulls it in. |
 
@@ -62,7 +64,6 @@ No cards currently blocked.
 
 | ID | Priority | Labels | Card | Primary | Support | Checkpoint | Done when |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| S1-003 | P0 | Feed, Detail | Feed and detail vertical slice | Nil + Samara | Patrick | 2026-05-13 | Feed returns visible, non-cancelled meetups sorted by start time; detail page shows host, time, location, description, visibility, capacity/participants, and current user state. |
 | S1-004 | P0 | RSVP | RSVP join/leave vertical slice | Samara | Nil | 2026-05-13 | User can join, leave, or update RSVP safely from the UI; duplicate participation is prevented. |
 | S1-005 | P0 | My Meetups, Host controls | My Meetups and host controls | Samara | Martin + Nil | 2026-05-15 | Created and joined meetups are visible; only the host can edit or cancel their own meetup. |
 | S1-012 | P1 | Maps, Frontend, UX | Get Google Maps API working for event location UI | Patrick | Samara + Martin | 2026-05-15 | Deployed SPA has the required public Google Maps env vars configured, map/location UI renders without key/config errors, and the key is restricted appropriately before demo use. |

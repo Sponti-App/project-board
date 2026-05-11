@@ -2,10 +2,12 @@
 
 Team-facing Markdown Kanban for the Spontapp final project.
 
-This repo is intentionally small. The main artifact is:
+This repo is intentionally small. The main artifacts are:
 
 - `KANBAN.md`
+- `DEPLOYMENT.md`
 - `PROJECT-BRIEF.md`
+- `AGENTS.md`
 
 Private notes, email logs, raw inbox material, decision drafts, and Office artifacts are not stored here.
 
