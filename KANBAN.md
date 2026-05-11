@@ -57,6 +57,7 @@ Goal: Build the true MVP flow end to end by Friday 2026-05-15.
 | S1-002 | P0 | Events, Create flow | Create meetup vertical slice | Samara | Nil + Patrick | 2026-05-12 | API event routes and models exist; `GET /api/v1/events` currently returns 500, so protected route behavior must be verified before create/feed integration can be trusted. |
 | S1-006 | P0 | Demo, Data | Demo data and seed reset | Martin | Samara | 2026-05-15 | Define seed/reset expectations after protected API route behavior is clear. |
 | S1-014 | P0 | Frontend, Routing, UX | Complete MVP page/route gap audit | Patrick | Samara + Martin | 2026-05-11 | Current code has home, auth, menu pages, circles, event hub/create/edit, profile/edit, notifications popover, QR share component, and map component. Missing or unclear against the Miro map: event detail route page, settings/account settings, notification settings page, standalone QR/share page, and explicit manage-friends flow. Mark each as build now, fold into existing page, or defer. |
+| S1-015 | P1 | Product, Onboarding, UX | Define onboarding flow | Martin | Patrick + Samara | 2026-05-15 | Create the onboarding flow from the Miro sequence: welcome/what is Sponti, permissions/location prompt, import-friends decision point, and create-profile step. Keep this as flow definition first; contact import implementation remains out of P0 unless the team explicitly pulls it in. |
 
 ### Backlog
 
