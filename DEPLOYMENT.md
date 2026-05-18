@@ -1,6 +1,6 @@
 # Spontapp Deployment
 
-Last updated: 2026-05-11
+Last updated: 2026-05-18
 
 ## Purpose
 
@@ -10,15 +10,15 @@ This document explains the current Vercel deployment setup for Spontapp / Sponti
 
 | Vercel project | Repo folder | Status | URL |
 | --- | --- | --- | --- |
-| `sponti-spa` | `spa/` | Production deployment `Ready`; root and auth pages return 200 | https://sponti-spa.vercel.app |
-| `sponti-auth` | `auth-server/` | Production deployment `Ready`; auth smoke green | https://sponti-auth.vercel.app/health |
-| `sponti-api` | `api/` | Production deployment `Ready`; `/health` and event CRUD-by-ID smoke green, feed/list routes return 500 | https://sponti-api-pi.vercel.app/health |
+| `sponti-spa` | `spa/` | Production deployment `Ready`; `/login` returns 200 | https://sponti-spa.vercel.app |
+| `sponti-auth` | `auth-server/` | Production deployment `Ready`; health and register smoke green | https://sponti-auth.vercel.app/health |
+| `sponti-api` | `api/` | Production deployment `Ready`; `/health`, event create/cancel, feed/list, map, connections, and user search smoke green | https://sponti-api-pi.vercel.app/health |
 
-`sponti-api` is deployed and the previous pre-auth route crash is cleared. After rotating the Mongo URI and redeploying, `GET /api/v1/events` with an invalid bearer token returns 401 instead of 500. With a real auth-issued token, event create, read by ID, update, RSVP/membership update, and cancel pass. The remaining backend issue is the list/feed-style route group returning 500: `GET /api/v1/events`, `/api/v1/events/calendar/upcoming`, `/api/v1/events/map/active`, `/api/v1/connections`, and `/api/v1/users/search`.
+`sponti-api` is deployed and the previous authenticated list/feed route blocker is cleared. A 2026-05-18 production smoke with a real auth-issued token passed register, event create, `GET /api/v1/events`, `/api/v1/events/calendar/upcoming`, `/api/v1/events/map/active`, `/api/v1/connections`, `/api/v1/users/search`, `GET /api/v1/events/mine/upcoming`, and event cancel.
 
 The project is named `sponti-api`, but the active production alias is currently `https://sponti-api-pi.vercel.app`. `https://sponti-api.vercel.app` is not the active alias and returns 404.
 
-Production deployments are from `Sponti-App/Sponti` `main`. Latest checked `main` and deployed auth/API commit is `86f0415`.
+Production deployments are from `Sponti-App/Sponti` `main`. As of 2026-05-18, `dev` is ahead of `main` and should be reconciled before the final release candidate is promoted.
 
 ## Monorepo Setup
 
@@ -99,7 +99,7 @@ Do not paste these values into GitHub, Slack, screenshots, or docs.
 - Framework preset: Express
 - Current production alias: `https://sponti-api-pi.vercel.app`
 - Current deployment status: `Ready`
-- Current runtime status: `/health` is green; event CRUD-by-ID works with a real token; feed/list-style routes return 500
+- Current runtime status: `/health` is green; authenticated event create/cancel, feed/list, map, connections, user search, and my-upcoming smoke pass
 
 Expected public health endpoint:
 
@@ -147,7 +147,7 @@ Before treating a deployment as usable:
 
 ## Next Steps
 
-- Diagnose the 500s on `GET /api/v1/events`, `/api/v1/events/calendar/upcoming`, `/api/v1/events/map/active`, `/api/v1/connections`, and `/api/v1/users/search`.
-- Add sanitized server logging or local reproduction for the failing list/feed routes, because current Vercel logs show request rows without stack traces.
-- Keep `GET https://sponti-api-pi.vercel.app/health` green and preserve the passing auth/event CRUD-by-ID smoke path.
-- Browser-smoke the deployed frontend auth and create-flow UX against the current production services.
+- Reconcile `dev` and `main`, then promote only the approved release candidate to production.
+- Keep `GET https://sponti-api-pi.vercel.app/health` green and preserve the passing authenticated smoke path.
+- Browser-smoke the deployed frontend auth, create-flow, map/calendar, RSVP, My Meetups, QR, and settings UX against the final production services.
+- Run dependency/security review before freeze; latest SPA audit reports a moderate Next/PostCSS advisory that should not be auto-fixed with a breaking forced downgrade.
