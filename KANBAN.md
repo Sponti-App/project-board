@@ -76,15 +76,48 @@ This does not mean code freeze. Sprint 2 owns release-candidate review, branch p
 
 Goal: Stabilize, polish, smoke test, rehearse, and freeze by Wednesday 2026-05-20.
 
+### Daily Review Gate
+
+Run this gate daily during Sprint 2. The goal is to keep Nil and the team in a human-reviewable loop: review working vertical slices, not half-integrated layers.
+
+Before review can start:
+
+- All feature work intended for the review must be merged into `dev`; unfinished feature branches stay out of the release review.
+- `dev` vs `main` divergence must be understood. If `dev` is the release candidate, open a `dev` -> `main` release PR or otherwise document the promotion path.
+- Vercel previews for the release candidate must be green for `sponti-spa`, `sponti-auth`, and `sponti-api`.
+- Demo-critical env vars must be confirmed without exposing secret values: auth/API JWT match, API DB config, Google Maps public key/map ID, and production aliases.
+- iPhone and Android real-app builds must be installed or updated from the same release candidate when native testing is in scope.
+- Demo data/accounts must be known before UX review starts, otherwise reviewers waste time debugging empty or inconsistent states.
+
+Potential review blockers:
+
+- Open feature PRs that still change auth, event creation, RSVP, map/calendar, QR/contact, or navigation.
+- `dev` has not been promoted or release PR scope is unclear.
+- Production and preview are testing different commits.
+- SPA dependency audit advisory is unresolved or not explicitly accepted for the demo.
+- Mobile app behavior differs from browser behavior in a demo-critical flow.
+- Review feedback has no owner or same-day decision path.
+
+Daily reviews to run:
+
+| Review | What it checks | What to expect | How it helps |
+| --- | --- | --- | --- |
+| CodeRabbit PR review | Automated code-quality review on the release PR or final feature PRs. | Specific inline-style issues grouped by severity; may include false positives. | Gives Nil a first-pass reviewer so human review can focus on architecture, correctness, and demo risk. |
+| Codex code review | Human-readable review of the release diff with focus on bugs, regressions, missing tests, and maintainability. | Findings ordered by severity with file/line references and concrete fixes. | Keeps the vertical-slice structure honest: routes, schemas, controllers, services, models, frontend wrappers, and UI stay in the expected places. |
+| Codex security scan | Security-focused review of auth, tokens, QR/contact flow, API authorization, input validation, secrets, and dependency risk. | A markdown report with validated findings or explicit residual risk. | Catches demo-dangerous issues before freeze, especially auth bypass, token leakage, unsafe QR behavior, and exposed secrets. |
+| Automated checks | `spa` typecheck/lint/build/audit, `api` test/build/audit, `auth-server` build/audit. | Pass/fail output plus warnings that need owner decisions. | Proves the release candidate is mechanically sound before Nil spends deep review time. |
+| Device and viewport QA | Browser mobile/laptop plus real iPhone and Android app testing. | A short matrix of pass/fail notes per core flow and viewport/device. | Catches layout, safe-area, keyboard, navigation, Capacitor, and touch issues that desktop browser review misses. |
+| Production smoke | Auth health, API health, register/login, create flare, map/calendar visibility, RSVP, My Meetups, QR/contact if demoed. | A short pass/fail checklist against the final deployed environment. | Confirms the demo path works where the audience will see it, not only locally. |
+
 ### In Progress
 
 | ID | Priority | Labels | Card | Primary | Support | Checkpoint | Done when |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | S2-001 | P0 | QA, Risk | Bug triage and freeze-candidate risk review | Martin | Team + Nil | 2026-05-18 | Bugs are marked blocking/non-blocking, final code/demo risks are reviewed, and the team knows what must be fixed before freeze. |
-| S2-002 | P0 | Frontend, Design, Polish | Responsive and UX polish pass | Patrick | Samara + Martin | 2026-05-18 | Core pages work on mobile and laptop widths; empty/loading/error states are understandable; visual issues are fixed or documented. |
-| S2-003 | P0 | Demo, Fallback | Demo readiness and fallback package | Martin + Patrick | Samara | 2026-05-18 | Demo accounts and data are ready, fallback screenshots exist, and the demo environment is known. |
-| S2-006 | P0 | Git, Release | Reconcile `dev` and `main`, then cut release candidate | Nil + Martin | Samara | 2026-05-18 | `dev` and `main` divergence is reviewed, the release branch/PR is created, Vercel previews are green, and production receives only the approved release candidate. |
-| S2-007 | P0 | Code review, Security | Start continuous code and security review loop | Martin + Nil | Codex | 2026-05-18 | Every final PR gets automated checks plus a focused Codex code review and security pass before merge or freeze approval. |
+| S2-002 | P0 | Frontend, Design, Polish | Responsive and device UX polish pass | Patrick | Samara + Martin | 2026-05-18 | Core pages work on mobile browser, laptop browser, iPhone real app, and Android real app; empty/loading/error states are understandable; visual issues are fixed or documented. |
+| S2-003 | P0 | Demo, Fallback | Demo readiness and fallback package | Martin + Patrick | Samara | 2026-05-18 | Demo accounts and seed data are ready, fallback screenshots/video exist, and the demo environment plus real-device install path are known. |
+| S2-006 | P0 | Git, Release | Reconcile feature branches, `dev`, and `main`, then cut release candidate | Nil + Martin | Samara | 2026-05-18 | All demo-critical feature branches are merged into `dev`, `dev` vs `main` divergence is reviewed, the release branch/PR is created, Vercel previews are green, and production receives only the approved release candidate. |
+| S2-007 | P0 | Code review, Security | Start continuous code and security review loop | Martin + Nil | Codex | 2026-05-18 | Daily review loop runs on the release candidate: automated checks, CodeRabbit PR review, Codex code review, Codex security scan, device/viewport QA, and production smoke. |
 
 ### Backlog
 
@@ -94,6 +127,7 @@ Goal: Stabilize, polish, smoke test, rehearse, and freeze by Wednesday 2026-05-2
 | S2-005 | P0 | QA, Deployment, Freeze | Final deployed smoke test and code freeze | Martin + Nil | Samara | 2026-05-20 | Final deployed smoke test passes, main branch is frozen, and no more feature PRs merge. |
 | S2-008 | P1 | Security, Dependencies | Resolve or explicitly accept SPA dependency advisory | Nil | Martin | 2026-05-18 | `npm audit --audit-level=moderate` is reviewed; the Next/PostCSS advisory is upgraded, suppressed with rationale, or accepted as non-demo-blocking without using a breaking forced downgrade. |
 | S2-009 | P1 | QA, Frontend | Clean non-blocking lint warnings | Samara + Patrick | Nil | 2026-05-19 | SPA lint has no stale unused variables or unused eslint-disable directives, or the remaining warnings are documented as non-blocking. |
+| S2-010 | P1 | Mobile, QA | Real iPhone and Android app smoke matrix | Samara + Martin | Patrick | 2026-05-19 | iPhone and Android app builds are tested for login, navigation, create flare, map/calendar, event details, RSVP, My Meetups, QR/contact if demoed, keyboard behavior, safe areas, and back navigation. |
 
 ## Later - Should-Have / Stretch
 
