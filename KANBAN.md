@@ -1,6 +1,6 @@
 # Spontapp Kanban
 
-Last updated: 2026-05-18
+Last updated: 2026-05-20
 
 ## Rules
 
@@ -57,8 +57,8 @@ This does not mean code freeze. Sprint 2 owns release-candidate review, branch p
 | S1-004 | P0 | RSVP | RSVP join/leave vertical slice | Samara + Nil | 2026-05-18 | Backend membership endpoint exists and local API tests cover RSVP-related event membership behavior. Final UX smoke stays in Sprint 2. |
 | S1-005 | P0 | My Meetups, Host controls | My Meetups and host controls | Samara + Nil | 2026-05-18 | `/events/mine/upcoming`, host edit, cancel, and reactivate surfaces exist; production smoke verified my-upcoming and cancel. |
 | S1-007 | P0 | Deployment, QA | Deployed MVP integration and smoke checklist | Martin + Nil | 2026-05-18 | API tests/build, auth build, SPA typecheck/build, and production runtime smoke are green. |
-| S1-014 | P0 | Frontend, Routing, UX | Complete MVP page/route gap audit | Patrick + Samara | 2026-05-18 | Latest `dev` has home map/calendar, auth, menu pages, onboarding, settings, circles, event create/edit/dashboard, profile pages, QR route, and QR share flow. |
-| S1-015 | P1 | Product, Onboarding, UX | Define onboarding flow | Martin + Patrick | 2026-05-18 | Onboarding route exists in latest `dev`; Sprint 2 should only polish and demo-test it. |
+| S1-014 | P0 | Frontend, Routing, UX | Complete MVP page/route gap audit | Patrick + Samara | 2026-05-18 | Latest `dev` has home map/calendar, auth, menu pages, settings, circles, event create/edit/dashboard, profile pages, QR route, and QR share flow. The earlier `/onboarding` route is no longer present. |
+| S1-015 | P1 | Product, Onboarding, UX | Define onboarding flow | Martin + Patrick | 2026-05-18 | Historical onboarding work exists in earlier branches, but the `/onboarding` route and post-register home tour were removed before the current `main`/`dev` state. |
 
 ### Deferred / Folded Into Sprint 2
 
@@ -74,7 +74,7 @@ This does not mean code freeze. Sprint 2 owns release-candidate review, branch p
 
 ## Sprint 2 - Freeze / Demo
 
-Goal: Stabilize, polish, smoke test, rehearse, and freeze by Wednesday 2026-05-20.
+Goal: Stabilize, polish, smoke test, rehearse, and freeze for the final presentation. As of 2026-05-20, `main` is kept as the presentable fallback while feature and polish work continues on `dev`.
 
 ### Daily Review Gate
 
